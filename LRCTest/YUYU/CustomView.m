@@ -85,8 +85,16 @@ const NSTimeInterval customDuration = 0.5;   // 动画时间
 
 - (void) cellLayout
 {
-    if (protocolSource.cellForIndex) {
-        
+    if (!protocolSource.cellForIndex) {
+        self.userInteractionEnabled = NO;
+        return;
+    }
+    
+    if ((NSInteger)[self.dataSource numbersInCustomView:self] < 1) {
+        self.userInteractionEnabled = NO;
+        return;
+    }
+    
         // 上一个
         NSInteger previousIndex = self.currentIndex -1;
         if (previousIndex == -1 && protocolSource.cellForIndex) {
@@ -115,6 +123,13 @@ const NSTimeInterval customDuration = 0.5;   // 动画时间
         nextCell.frame = CGRectMake(0, 0, smallItemW, smallItemH);
         nextCell.center = CGPointMake(sizeW - (sizeW - bigItemW)/4, smallItemH/2);
         nextCell.tag = 1001;
+    
+    if ((NSInteger)[self.dataSource numbersInCustomView:self] == 1) {
+        self.userInteractionEnabled = NO;
+        previousCell.hidden = YES;
+        nextCell.hidden = YES;
+        return;
+    }
         
          // 加入到缓存中
         if (![self.cacheMuSet containsObject:currentCell]) {
@@ -126,7 +141,7 @@ const NSTimeInterval customDuration = 0.5;   // 动画时间
         if (![self.cacheMuSet containsObject:nextCell]) {
             [self.cacheMuSet addObject:nextCell];
         }
-    }
+
 }
 
 // 左滑
